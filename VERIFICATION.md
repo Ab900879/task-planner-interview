@@ -47,3 +47,4 @@ PASS  AC4 并发：3 个并发预扣只有 1 个成功、余额 1→0 不为负 
 - **崩溃补偿**：预扣成功后进程崩溃，该额度不会自动退回（TASK.md 范围外）。如需补齐：引入 `CreditReservation` 表记录「预扣中」状态，生成结束后置为 consumed/refunded，定时任务对超时记录对账退回。
 - **UI 级验证**：如上，未在真实应用中执行。
 - `wasp compile` 与两个 tsc 检查未运行（依赖 `wasp install` 生成的 SDK，环境受限）。改动范围小且类型显式，风险集中在 `operations.ts` 的返回类型变更，前端已同步。
+- **一处未验证的假设**：`operations.ts` 使用的 `GetUserCredits` 操作类型名是按 Wasp 对声明式操作的命名惯例推断的，未经 `wasp compile` 实测。接手者运行 `wasp compile` 后若报类型不存在，检查 `main.wasp.ts`/`demo-ai-app.wasp.ts` 中 `getUserCredits` 的声明是否与框架版本匹配即可。
