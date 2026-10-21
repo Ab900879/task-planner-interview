@@ -17,6 +17,7 @@
  */
 import { execSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
+import { rmSync } from "node:fs";
 import { PrismaClient } from "@prisma/client";
 
 const results = [];
@@ -29,12 +30,15 @@ function record(name, ok, detail) {
 let embedded = null;
 if (!process.env.DATABASE_URL) {
   const { default: EmbeddedPostgres } = await import("embedded-postgres");
+  rmSync(".verify-pg", { recursive: true, force: true });
   embedded = new EmbeddedPostgres({
     databaseDir: ".verify-pg",
     user: "postgres",
     password: "postgres",
     port: 55432,
     persistent: false,
+    // 中文 Windows 的默认 locale 没有 PG text search 配置，强制 C locale
+    initdbFlags: ["--locale=C", "--encoding=UTF8"],
   });
   await embedded.initialise();
   await embedded.start();
