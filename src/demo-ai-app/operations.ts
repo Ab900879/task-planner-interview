@@ -48,7 +48,10 @@ export const generatePlan: GeneratePlan<
 
   // 预扣：一条带条件的原子 UPDATE（见 credits.ts），额度不足或被并发
   // 请求扣走时 count 为 0 —— 此时绝不发起模型调用（402）。
-  const reserved = await reserveCredit(context.entities, context.user.id);
+  const reserved = await reserveCredit(
+    { user: context.entities.User },
+    context.user.id,
+  );
   if (!reserved) {
     throw new HttpError(
       402,
@@ -68,14 +71,14 @@ export const generatePlan: GeneratePlan<
     });
 
     const creditsRemaining = await getCredits(
-      context.entities,
+      { user: context.entities.User },
       context.user.id,
     );
     console.log("Schedule saved, credits consumed:", creditsRemaining);
     return { schedule: generatedSchedule, creditsRemaining };
   } catch (err) {
     // 模型明确失败：退回预扣的额度，再向客户端抛出可读的错误。
-    await refundCredit(context.entities, context.user.id);
+    await refundCredit({ user: context.entities.User }, context.user.id);
     console.log("Mock provider failed, credit refunded");
     throw new HttpError(502, "生成失败，额度已退回，你可以重试。");
   }
@@ -88,7 +91,7 @@ export const getUserCredits: GetUserCredits<void, number> = async (
   if (!context.user) {
     throw new HttpError(401);
   }
-  return getCredits(context.entities, context.user.id);
+  return getCredits({ user: context.entities.User }, context.user.id);
 };
 
 const createTaskInputSchema = z.object({
