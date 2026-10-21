@@ -1,8 +1,8 @@
 # 提交说明
 
 - 姓名或称呼：戴
-- 应聘方向：产品
-- 打码手机号：待填（提交 PR 前补充，格式如 138****5678）
+- 应聘方向：产品（目标岗位：产品运营）
+- 打码手机号：198****1632
 
 ## 结果概览
 
@@ -20,6 +20,8 @@
 - 验证记录与待办交接：`VERIFICATION.md`
 - 主要代码改动：`src/demo-ai-app/credits.ts`（新增）、`src/demo-ai-app/operations.ts`、`src/demo-ai-app/DemoAppPage.tsx`
 - 验证脚本：`scripts/verify-credits.mjs`
+
+技术方向要求的三项（SPEC 先行、代码实现、可重复验证与运行说明）均已在仓库内完成，作为产品方案的工程侧证据。
 
 ## 验证记录
 
